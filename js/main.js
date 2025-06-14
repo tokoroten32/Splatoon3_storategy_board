@@ -55,7 +55,8 @@ function initializeRuleSelector() {
 }
 
 // Initial setup
-window.addEventListener('load', () => {
+window.addEventListener('load', async () => {
+  await loadWeaponSubSpecialData(); // JSONデータを先に読み込む
   resizeCanvases(); // DOMのサイズが確定してから実行
   initializeMapSelector();  // マップセレクタを初期化
   initializeRuleSelector(); // ルールセレクタを初期化
@@ -65,6 +66,7 @@ window.addEventListener('load', () => {
   initializeAccordion();       // アコーディオン機能を初期化
   initializeGearUI();          // ギアUIを初期化
   initializeInfoPanelToggle(); // 情報パネルのトグル機能を初期化
+  updateSubSpecialUI(null);      // 初期状態ではメイン武器未選択なのでマップ下のサブ/スペは非表示
   drawBackground(); // 最後に背景を描画 (ルール選択が反映されるように)
 });
 
@@ -98,6 +100,13 @@ drawCanvas.addEventListener('mousedown', e => {
         mode = 'reposition'; // Set mode to reposition
         dragOffsetX = clickX - action.x;
         dragOffsetY = clickY - action.y;
+        // 再配置のために選択されたアイコンがメインウェポンの場合、サブ/スペUIを更新
+        if (action.itemType === 'main' && action.weaponName) {
+          updateSubSpecialUI(action.weaponName); // マップ下の表示を更新
+        } else {
+          updateSubSpecialUI(null); // それ以外はマップ下の表示をリセット
+        }
+
         clearAllButtonHighlights(); // Deselect any tool buttons
         drawCanvas.style.cursor = 'grabbing';
         return; // Stop further processing for this mousedown event
@@ -144,12 +153,17 @@ drawCanvas.addEventListener('mousedown', e => {
     actions.push({
       type: 'item_icon',
       itemType: itemType, // 'main', 'sub', or 'special'
+      weaponName: itemData.name, // アイテム名も保存 (メイン武器の場合、サブスペ特定に使う)
       x: drawX,
       y: drawY,
       src: itemData.src,
       width: iconWidth,
       height: iconHeight
     });
+    // メインウェポンを配置した場合、マップ下のサブ/スペUIを更新
+    if (itemType === 'main') {
+      updateSubSpecialUI(itemData.name);
+    }
   }
 });
 

@@ -29,7 +29,6 @@
     }
     #info-panel {
       width: 250px; /* 情報パネルの幅を固定 */
-      position: relative; /* トグルボタンの基準位置とするため */
       background-color: #333;
       padding: 15px;
       overflow-y: auto;
@@ -128,6 +127,23 @@
       writing-mode: vertical-rl; /* 文字を縦書きに */
       z-index: 15; /* 他の要素より手前に */
     }
+    #related-sub-special-display-in-panel {
+      display: flex;
+      flex-direction: column; /* ボタンを縦に並べる */
+      align-items: center;
+      gap: 5px; /* ボタン間のスペース */
+      margin-bottom: 15px; /* 下の要素とのマージン */
+      padding: 5px 0;
+      /* border: 1px dashed #555; */ /* 必要であれば境界線 */
+    }
+    #related-main-weapons-display {
+      display: flex;
+      flex-direction: column; /* ボタンを縦に並べる */
+      align-items: center;
+      gap: 5px; /* ボタン間のスペース */
+      margin-bottom: 15px; /* 下の要素とのマージン */
+      padding: 5px 0;
+    }
   </style>
 </head>
 <body>
@@ -171,6 +187,16 @@
       <button id="info-panel-toggle">&lt;</button> <!-- トグルボタン -->
       <h4>メモ／ギア構成</h4>
       <textarea id="memo-area" placeholder="ここにメモやギア構成を記入..."></textarea>
+
+      <h5 style="margin-top: 15px;">関連メインウェポン</h5>
+      <div id="related-main-weapons-display">
+        <!-- 選択されたサブ/スペシャルを持つメインウェポンがここに表示される -->
+      </div>
+
+      <h5 style="margin-top: 20px;">関連サブ・スペシャル</h5>
+      <div id="related-sub-special-display-in-panel">
+        <!-- 選択されたメインウェポンに関連するサブ・スペボタンがここに表示される -->
+      </div>
       
       <h5>選択したギア</h5>
       <div id="selected-gear-display-area">

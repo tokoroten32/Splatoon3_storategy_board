@@ -2,6 +2,47 @@
 
 let selectedItemToPlace = null; // { type: 'main' | 'sub', data: object }
 
+/**
+ * 汎用的な武器・サブ・スペボタンを作成する関数
+ * @param {object} itemData - 武器/サブ/スペのデータオブジェクト (name, src, width, height を含む)
+ * @param {string} itemType - 'main', 'sub', 'special' のいずれか
+ * @param {function} onClickCallback - ボタンクリック時のコールバック関数
+ * @returns {HTMLButtonElement} 作成されたボタン要素
+ */
+function createItemButton(itemData, itemType, onClickCallback) {
+  const button = document.createElement('button');
+  button.style.background = 'transparent';
+  button.style.border = '1px solid #777';
+  button.style.margin = '2px';
+  button.style.cursor = 'pointer';
+  button.title = itemData.name;
+  button.dataset.weaponName = itemData.name; // 識別用
+  button.dataset.itemType = itemType; // 識別用
+
+  const img = new Image();
+  img.src = itemData.src;
+  img.alt = itemData.name;
+  img.style.width = `${itemData.width * (itemType === 'main' ? 1 : 0.9)}px`; // メインはそのまま、サブスペは少し小さく
+  img.style.height = `${itemData.height * (itemType === 'main' ? 1 : 0.9)}px`;
+  img.style.display = 'block';
+  button.appendChild(img);
+
+  const nameSpan = document.createElement('span');
+  nameSpan.textContent = itemData.name;
+  nameSpan.style.marginLeft = '8px';
+  nameSpan.style.fontSize = '11px';
+  nameSpan.style.color = 'white';
+  nameSpan.style.whiteSpace = 'nowrap';
+  button.appendChild(nameSpan);
+
+  button.style.display = 'flex';
+  button.style.alignItems = 'center';
+  button.style.padding = '5px 8px';
+
+  button.onclick = () => onClickCallback(itemData, itemType, button);
+  return button;
+}
+
 function displayWeaponButtons(categoryKey, container) {
   container.innerHTML = ''; // 既存のボタンをクリア
   // selectedItemToPlace = null; // カテゴリ変更時に選択をリセットするならここだが、サブ選択は維持したい場合もある
@@ -13,36 +54,7 @@ function displayWeaponButtons(categoryKey, container) {
 
   const weapons = WEAPON_DATA[categoryKey].weapons;
   weapons.forEach(weapon => {
-    const button = document.createElement('button');
-    button.style.background = 'transparent';
-    button.style.border = '1px solid #777'; // 少し濃いめのボーダー
-    // button.style.padding = '2px'; // HTML/CSS側で制御するため削除またはコメントアウト
-    button.style.margin = '2px';
-    button.style.cursor = 'pointer';
-    button.title = weapon.name;
-
-    const img = new Image();
-    img.src = weapon.src;
-    img.alt = weapon.name;
-    img.style.width = `${weapon.width}px`;
-    img.style.height = `${weapon.height}px`;
-    img.style.display = 'block';
-
-    button.appendChild(img);
-
-    const nameSpan = document.createElement('span');
-    nameSpan.textContent = weapon.name;
-    nameSpan.style.marginLeft = '8px'; // Space between icon and name
-    nameSpan.style.fontSize = '11px'; // Smaller font for fitting
-    nameSpan.style.color = 'white';   // Ensure text is visible
-    nameSpan.style.whiteSpace = 'nowrap'; // Prevent name from wrapping
-    button.appendChild(nameSpan);
-
-    // Adjust button styles for flex layout of icon and name
-    button.style.display = 'flex';
-    button.style.alignItems = 'center';
-    button.style.padding = '5px 8px'; // パディング調整
-    button.onclick = () => {
+    const button = createItemButton(weapon, 'main', (itemData, itemType, clickedButton) => {
       selectedItemToPlace = { type: 'main', data: weapon };
       mode = 'place';
       selectedInkColor = null;
@@ -52,8 +64,14 @@ function displayWeaponButtons(categoryKey, container) {
       selectedIconForRepositioning = null; // 再配置対象を解除
       drawCanvas.style.cursor = 'crosshair'; // or 'copy' if preferred for placing
       clearAllButtonHighlights();
-      button.style.border = '2px solid gold';
-    };
+      clickedButton.style.border = '2px solid gold';
+      // メインウェポンが選択されたので、右側の「関連メインウェポン」表示エリアをクリア
+      const relatedMainWeaponsArea = document.getElementById('related-main-weapons-display');
+      if (relatedMainWeaponsArea) {
+        relatedMainWeaponsArea.innerHTML = '';
+      }
+      updateSubSpecialUI(weapon.name); // メインウェポン選択時にサブ/スペUIを更新
+    });
     container.appendChild(button);
   });
 }
@@ -109,36 +127,7 @@ function initializeSubWeaponUI() {
   container.innerHTML = ''; // クリア
 
   SUB_WEAPON_DATA.forEach(subWeapon => {
-    const button = document.createElement('button');
-    button.style.background = 'transparent';
-    button.style.border = '1px solid #777';
-    // button.style.padding = '2px';
-    button.style.margin = '2px';
-    button.style.cursor = 'pointer';
-    button.title = subWeapon.name;
-
-    const img = new Image();
-    img.src = subWeapon.src;
-    img.alt = subWeapon.name;
-    img.style.width = `${subWeapon.width}px`;
-    img.style.height = `${subWeapon.height}px`;
-    img.style.display = 'block';
-
-    button.appendChild(img);
-
-    const nameSpan = document.createElement('span');
-    nameSpan.textContent = subWeapon.name;
-    nameSpan.style.marginLeft = '8px';
-    nameSpan.style.fontSize = '11px';
-    nameSpan.style.color = 'white';
-    nameSpan.style.whiteSpace = 'nowrap';
-    button.appendChild(nameSpan);
-
-    button.style.display = 'flex';
-    button.style.alignItems = 'center';
-    button.style.padding = '5px 8px';
-
-    button.onclick = () => {
+    const button = createItemButton(subWeapon, 'sub', (itemData, itemType, clickedButton) => {
       selectedItemToPlace = { type: 'sub', data: subWeapon };
       mode = 'place';
       selectedInkColor = null;
@@ -148,8 +137,14 @@ function initializeSubWeaponUI() {
       selectedIconForRepositioning = null; // 再配置対象を解除
       drawCanvas.style.cursor = 'crosshair'; // or 'copy'
       clearAllButtonHighlights();
-      button.style.border = '2px solid gold';
-    };
+      clickedButton.style.border = '2px solid gold';
+      // サブウェポンが選択されたので、右側の「関連サブ・スペシャル」表示エリアをクリア
+      const relatedSubSpecialArea = document.getElementById('related-sub-special-display-in-panel');
+      if (relatedSubSpecialArea) {
+        relatedSubSpecialArea.innerHTML = '';
+      }
+      updateRelatedMainWeaponsUI(subWeapon.name, 'sub'); // 関連メインウェポンを表示
+    });
     container.appendChild(button);
   });
 }
@@ -163,33 +158,7 @@ function initializeSpecialWeaponUI() {
   container.innerHTML = ''; // クリア
 
   SPECIAL_WEAPON_DATA.forEach(specialWeapon => {
-    const button = document.createElement('button');
-    button.style.background = 'transparent';
-    button.style.border = '1px solid #777';
-    button.style.margin = '2px';
-    button.style.cursor = 'pointer';
-    button.title = specialWeapon.name;
-
-    const img = new Image();
-    img.src = specialWeapon.src;
-    img.alt = specialWeapon.name;
-    img.style.width = `${specialWeapon.width}px`;
-    img.style.height = `${specialWeapon.height}px`;
-    img.style.display = 'block';
-    button.appendChild(img);
-
-    const nameSpan = document.createElement('span');
-    nameSpan.textContent = specialWeapon.name;
-    nameSpan.style.marginLeft = '8px';
-    nameSpan.style.fontSize = '11px';
-    nameSpan.style.color = 'white';
-    nameSpan.style.whiteSpace = 'nowrap';
-    button.appendChild(nameSpan);
-
-    button.style.display = 'flex';
-    button.style.alignItems = 'center';
-    button.style.padding = '5px 8px';
-    button.onclick = () => {
+    const button = createItemButton(specialWeapon, 'special', (itemData, itemType, clickedButton) => {
       selectedItemToPlace = { type: 'special', data: specialWeapon };
       mode = 'place';
       selectedInkColor = null;
@@ -199,8 +168,14 @@ function initializeSpecialWeaponUI() {
       selectedIconForRepositioning = null; // 再配置対象を解除
       drawCanvas.style.cursor = 'crosshair'; // or 'copy'
       clearAllButtonHighlights();
-      button.style.border = '2px solid gold';
-    };
+      clickedButton.style.border = '2px solid gold';
+      // スペシャルウェポンが選択されたので、右側の「関連サブ・スペシャル」表示エリアをクリア
+      const relatedSubSpecialArea = document.getElementById('related-sub-special-display-in-panel');
+      if (relatedSubSpecialArea) {
+        relatedSubSpecialArea.innerHTML = '';
+      }
+      updateRelatedMainWeaponsUI(specialWeapon.name, 'special'); // 関連メインウェポンを表示
+    });
     container.appendChild(button);
   });
 }

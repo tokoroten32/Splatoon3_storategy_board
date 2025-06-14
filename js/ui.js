@@ -107,6 +107,145 @@ function initializeGearUI() {
   });
 }
 
+let weaponSubSpecialDataStore = []; // sub-spe.json のデータを保持
+
+async function loadWeaponSubSpecialData() {
+  try {
+    const response = await fetch('./json/sub-spe.json');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    weaponSubSpecialDataStore = await response.json();
+    console.log("Sub/Special data loaded successfully.");
+  } catch (error) {
+    console.error("Failed to load sub-special data:", error);
+    // 必要であればエラー通知やフォールバック処理
+  }
+}
+
+function updateSubSpecialUI(mainWeaponName) {
+  const relatedDisplayArea = document.getElementById('related-sub-special-display-in-panel');
+
+  if (!relatedDisplayArea) {
+    console.error("#related-sub-special-display-in-panel not found.");
+    return;
+  }
+  // メインウェポンが選択されたので、「関連メインウェポン」表示はクリア
+  const relatedMainWeaponsArea = document.getElementById('related-main-weapons-display');
+  if (relatedMainWeaponsArea) {
+    relatedMainWeaponsArea.innerHTML = '';
+  }
+
+  relatedDisplayArea.innerHTML = ''; // 表示エリアをクリア
+
+  let targetSubName = null;
+  let targetSpecialName = null;
+  let targetSubData = null;
+  let targetSpecialData = null;
+
+  if (mainWeaponName && weaponSubSpecialDataStore.length > 0) {
+    const weaponInfo = weaponSubSpecialDataStore.find(w => w.weapon === mainWeaponName);
+    if (weaponInfo) {
+      targetSubName = weaponInfo.sub;
+      targetSpecialName = weaponInfo.special;
+
+      // サブウェポンデータを取得
+      targetSubData = SUB_WEAPON_DATA.find(sub => sub.name === targetSubName);
+      // スペシャルウェポンデータを取得
+      targetSpecialData = SPECIAL_WEAPON_DATA.find(sp => sp.name === targetSpecialName);
+    }
+  }
+
+  const createAndAppendButton = (itemData, itemType) => {
+    if (!itemData) return;
+    const button = createItemButton(itemData, itemType, (clickedItemData, clickedItemType, clickedButton) => {
+      selectedItemToPlace = { type: clickedItemType, data: clickedItemData };
+      mode = 'place';
+      selectedInkColor = null;
+      isDrawing = false;
+      isDrawingInk = false;
+      isRepositioningIcon = false;
+      selectedIconForRepositioning = null;
+      drawCanvas.style.cursor = 'crosshair';
+      
+      // マップ下のボタンのハイライト処理 (オプション)
+      // 他のマップ下ボタンのハイライトを解除
+      Array.from(relatedDisplayArea.children).forEach(childBtn => {
+        if (childBtn.tagName === 'BUTTON') childBtn.style.border = '1px solid #777';
+      });
+      clickedButton.style.border = '2px solid gold';
+
+      // 左側UIのツールボタンのハイライトもクリア
+      clearAllButtonHighlights();
+    });
+    // 右パネル内でのボタンスタイル調整
+    button.style.width = 'calc(100% - 4px)'; // コンテナ幅に合わせる (マージン2px * 2を考慮)
+    button.style.padding = '5px 8px'; // items.js の createItemButton と同じパディング
+    button.querySelector('img').style.width = `${itemData.width * 0.9}px`; // items.js のサブスペと同じサイズ感
+    button.querySelector('img').style.height = `${itemData.height * 0.9}px`;
+    button.querySelector('span').style.fontSize = '11px'; // items.js と同じフォントサイズ
+
+    relatedDisplayArea.appendChild(button);
+  };
+
+  if (targetSubData) createAndAppendButton(targetSubData, 'sub');
+  if (targetSpecialData) createAndAppendButton(targetSpecialData, 'special');
+}
+
+function updateRelatedMainWeaponsUI(selectedSubOrSpecialName, itemType) { // itemType: 'sub' or 'special'
+  const displayArea = document.getElementById('related-main-weapons-display');
+  if (!displayArea) {
+    console.error("#related-main-weapons-display not found.");
+    return;
+  }
+  displayArea.innerHTML = ''; // 表示エリアをクリア
+
+  // サブ/スペシャルが選択されたので、「関連サブ・スペシャル」表示はクリア
+  const relatedSubSpecialArea = document.getElementById('related-sub-special-display-in-panel');
+  if (relatedSubSpecialArea) {
+    relatedSubSpecialArea.innerHTML = '';
+  }
+
+  if (!selectedSubOrSpecialName || weaponSubSpecialDataStore.length === 0) {
+    return;
+  }
+
+  const relatedMains = weaponSubSpecialDataStore.filter(weaponEntry => {
+    if (itemType === 'sub') {
+      return weaponEntry.sub === selectedSubOrSpecialName;
+    } else if (itemType === 'special') {
+      return weaponEntry.special === selectedSubOrSpecialName;
+    }
+    return false;
+  }).map(weaponEntry => {
+    // WEAPON_DATA から完全な武器オブジェクトを見つける
+    for (const category in WEAPON_DATA) {
+      const foundWeapon = WEAPON_DATA[category].weapons.find(w => w.name === weaponEntry.weapon);
+      if (foundWeapon) return foundWeapon;
+    }
+    return null; // 見つからなかった場合
+  }).filter(weapon => weapon !== null);
+
+  relatedMains.forEach(mainWeaponData => {
+    const button = createItemButton(mainWeaponData, 'main', (clickedItemData, clickedItemType, clickedButton) => {
+      selectedItemToPlace = { type: 'main', data: clickedItemData };
+      mode = 'place';
+      drawCanvas.style.cursor = 'crosshair';
+
+      Array.from(displayArea.children).forEach(childBtn => {
+        if (childBtn.tagName === 'BUTTON') childBtn.style.border = '1px solid #777';
+      });
+      clickedButton.style.border = '2px solid gold';
+      clearAllButtonHighlights(); // 左側のUIのハイライトもクリア
+
+      updateSubSpecialUI(clickedItemData.name); // 関連サブ・スペシャルを更新
+    });
+    button.style.width = 'calc(100% - 4px)';
+    // 他のスタイルは createItemButton と updateSubSpecialUI のボタンに準拠
+    displayArea.appendChild(button);
+  });
+}
+
 function initializeInfoPanelToggle() {
   const toggleButton = document.getElementById('info-panel-toggle');
   const infoPanel = document.getElementById('info-panel');
