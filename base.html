@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>スプラ戦術ボード</title>
+  <style>
+    body { margin: 0; background-color: #222; color: white; display: flex; height: 100vh; overflow: hidden; font-family: sans-serif;}
+    #app-container { display: flex; width: 100%; height: 100%; }
+
+    #menu-panel {
+      width: 280px; /* メニューの幅を固定 */
+      background-color: #333;
+      padding: 15px;
+      overflow-y: auto; /* コンテンツが多い場合にスクロール */
+      height: 100%;
+      box-sizing: border-box;
+      border-right: 1px solid #444;
+    }
+
+    #canvasContainer {
+      flex-grow: 1; /* 残りのスペースをすべて使用 */
+      position: relative;
+      height: 100%;
+      display: flex; /* 中央揃えのため */
+      justify-content: center; /* 中央揃えのため */
+      align-items: center; /* 中央揃えのため */
+      overflow: hidden; /* Canvasがはみ出ないように */
+    }
+    #info-panel {
+      width: 250px; /* 情報パネルの幅を固定 */
+      position: relative; /* トグルボタンの基準位置とするため */
+      background-color: #333;
+      padding: 15px;
+      overflow-y: auto;
+      height: 100%;
+      box-sizing: border-box;
+      border-left: 1px solid #444;
+      transition: width 0.3s ease, padding 0.3s ease; /* アニメーション用 */
+      color: white;
+    }
+    canvas { display: block; position: absolute; top: 0; left: 0; }
+    #bgCanvas { z-index: 1; }
+    #drawCanvas { z-index: 2; cursor: crosshair; }
+
+    #controls {
+      /* position: fixed; スタイルを削除 */
+      /* z-index: 10; スタイルを削除 */
+      /* background-color, padding, border-radius は #menu-panel に移譲 */
+    }
+    #controls button, #menu-panel select {
+      display: block; /* ボタンやセレクトを縦に並べる */
+      width: calc(100% - 10px); /* パディングを考慮した幅 */
+      margin-bottom: 10px;
+      padding: 10px 15px;
+      cursor: pointer;
+      box-sizing: border-box;
+      background-color: #4f4f4f;
+      color: white;
+      border: 1px solid #666;
+    }
+    #controls button:hover, #menu-panel select:hover {
+        background-color: #5a5a5a;
+    }
+    #controls div[id*="-selector"] { /* weapon-selector, sub-weapon-selectorなど */
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid #555;
+      clear: both; /* For floated child buttons if any, though flex is preferred */
+      width: 100%; /* Ensure full width for child flex containers */
+    }
+    #controls span { color: white; margin-bottom: 5px; display: inline-block; }
+    #weapon-buttons-container, #sub-weapon-buttons-container, #special-weapon-buttons-container {
+      display: flex;
+      /* flex-wrap: wrap; */ /* columnの場合は不要になることが多い */
+      flex-direction: column; /* ボタンを縦に並べる */
+      gap: 4px; /* Space between buttons */
+      margin-top: 5px !important;
+      /* display: none;  JavaScript側で制御するため、こちらはコメントアウトのままでも可 */
+    }
+    #weapon-buttons-container button, #sub-weapon-buttons-container button, #special-weapon-buttons-container button {
+        width: calc(100% - 4px); /* 1列表示とし、メニュー幅いっぱいに広げる (gapを考慮) */
+        min-width: 120px; /* アイコンとテキスト表示のための最小幅 */
+        /* flex-grow: 1; を削除またはコメントアウト */
+    }
+    #controls div[id*="-selector"] > span:first-child { /* 各セレクタのタイトルspan */
+        cursor: pointer;
+        user-select: none; /* テキスト選択を防ぐ */
+    }
+    #memo-area {
+      width: calc(100% - 10px);
+      height: 150px;
+      margin-bottom: 15px;
+      padding: 5px;
+      box-sizing: border-box;
+      background-color: #2a2a2a;
+      color: white;
+      border: 1px solid #555;
+    }
+    #gear-icons-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    #selected-gear-display-area {
+      min-height: 100px; /* ギアを配置するエリアの最小の高さ */
+      border: 1px dashed #666;
+      padding: 10px;
+      margin-bottom: 15px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    #info-panel-toggle {
+      position: absolute;
+      top: 10px;
+      left: -25px; /* #info-panel の左外側に配置 */
+      width: 25px;
+      height: 50px;
+      background-color: #4f4f4f;
+      color: white;
+      border: 1px solid #666;
+      border-right: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      writing-mode: vertical-rl; /* 文字を縦書きに */
+      z-index: 15; /* 他の要素より手前に */
+    }
+  </style>
+</head>
+<body>
+  <div id="app-container">
+    <div id="menu-panel">
+      <div id="controls">
+        <button onclick="setDrawMode(this)">線を引く</button>
+        <button onclick="setArrowMode(this)">矢印を引く</button>
+        <button onclick="setInkMode('orange', this)">味方インク</button>
+        <button onclick="setInkMode('blue', this)">敵インク</button>
+        <button onclick="clearCanvas()">クリア</button>
+        <div id="map-selector-container" style="margin-top:10px; padding-top:10px; border-top:1px solid #555;">
+          <span>マップ選択:</span>
+          <select id="map-select"></select>
+        </div>
+        <div id="rule-selector-container" style="margin-top:10px; padding-top:10px; border-top:1px solid #555;">
+          <span>ルール選択:</span>
+          <select id="rule-select"></select>
+        </div>
+        <div id="weapon-selector"> <!-- カテゴリ選択プルダウンと武器ボタンコンテナがここに入る -->
+          <span id="weapon-selector-title">武器選択:</span>
+          <div id="weapon-buttons-container" style="margin-top: 10px;"></div>
+        </div>
+        <div id="sub-weapon-selector">
+          <span id="sub-weapon-selector-title">サブウェポン選択:</span>
+          <div id="sub-weapon-buttons-container" style="margin-top: 5px;"></div>
+        </div>
+        <div id="special-weapon-selector" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #555;">
+          <span id="special-weapon-selector-title">スペシャルウェポン選択:</span>
+          <div id="special-weapon-buttons-container" style="margin-top: 5px;">
+            <!-- スペシャルウェポンのボタンがここに追加される -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="canvasContainer">
+      <canvas id="bgCanvas"></canvas>
+      <canvas id="drawCanvas"></canvas>
+    </div>
+    <div id="info-panel">
+      <button id="info-panel-toggle">&lt;</button> <!-- トグルボタン -->
+      <h4>メモ／ギア構成</h4>
+      <textarea id="memo-area" placeholder="ここにメモやギア構成を記入..."></textarea>
+      
+      <h5>選択したギア</h5>
+      <div id="selected-gear-display-area">
+        <!-- 選択されたギアアイコンがここに表示される -->
+      </div>
+
+      <div id="gear-selector">
+        <span id="gear-selector-title">ギア選択:</span>
+        <div id="gear-icons-container" style="margin-top: 5px;">
+          <!-- ギアアイコンがここに追加される -->
+        </div>
+      </div>
+      <input type="file" id="loadMapFile" accept=".json" style="display: none;" onchange="loadMapState(event)">
+      <button onclick="document.getElementById('loadMapFile').click()" style="margin-top: 20px;">状態を読み込み</button>
+      <button onclick="saveMapState()">状態を保存</button>
+    </div>
+  </div>
+  <script src="./js/data.js"></script>
+  <script src="./js/canvas.js"></script>
+  <script src="./js/ui.js"></script>
+  <script src="./js/actions.js"></script>
+  <script src="./js/drawing.js"></script>
+  <script src="./js/ink.js"></script>
+  <script src="./js/items.js"></script>
+  <script src="./js/main.js"></script>
+</body>
+</html>
