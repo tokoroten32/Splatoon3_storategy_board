@@ -1,6 +1,7 @@
 // js/items.js
 
 let selectedItemToPlace = null; // { type: 'main' | 'sub', data: object }
+// WEAPON_SUB_SPECIAL_DATA は js/data.js に移動しました
 
 /**
  * 汎用的な武器・サブ・スペボタンを作成する関数

@@ -107,22 +107,6 @@ function initializeGearUI() {
   });
 }
 
-let weaponSubSpecialDataStore = []; // sub-spe.json のデータを保持
-
-async function loadWeaponSubSpecialData() {
-  try {
-    const response = await fetch('./json/sub-spe.json');
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    weaponSubSpecialDataStore = await response.json();
-    console.log("Sub/Special data loaded successfully.");
-  } catch (error) {
-    console.error("Failed to load sub-special data:", error);
-    // 必要であればエラー通知やフォールバック処理
-  }
-}
-
 function updateSubSpecialUI(mainWeaponName) {
   const relatedDisplayArea = document.getElementById('related-sub-special-display-in-panel');
 
@@ -143,8 +127,8 @@ function updateSubSpecialUI(mainWeaponName) {
   let targetSubData = null;
   let targetSpecialData = null;
 
-  if (mainWeaponName && weaponSubSpecialDataStore.length > 0) {
-    const weaponInfo = weaponSubSpecialDataStore.find(w => w.weapon === mainWeaponName);
+  if (mainWeaponName && WEAPON_SUB_SPECIAL_DATA.length > 0) { // items.js の WEAPON_SUB_SPECIAL_DATA を参照
+    const weaponInfo = WEAPON_SUB_SPECIAL_DATA.find(w => w.weapon === mainWeaponName);
     if (weaponInfo) {
       targetSubName = weaponInfo.sub;
       targetSpecialName = weaponInfo.special;
@@ -206,11 +190,11 @@ function updateRelatedMainWeaponsUI(selectedSubOrSpecialName, itemType) { // ite
     relatedSubSpecialArea.innerHTML = '';
   }
 
-  if (!selectedSubOrSpecialName || weaponSubSpecialDataStore.length === 0) {
+  if (!selectedSubOrSpecialName || WEAPON_SUB_SPECIAL_DATA.length === 0) { // items.js の WEAPON_SUB_SPECIAL_DATA を参照
     return;
   }
 
-  const relatedMains = weaponSubSpecialDataStore.filter(weaponEntry => {
+  const relatedMains = WEAPON_SUB_SPECIAL_DATA.filter(weaponEntry => { // items.js の WEAPON_SUB_SPECIAL_DATA を参照
     if (itemType === 'sub') {
       return weaponEntry.sub === selectedSubOrSpecialName;
     } else if (itemType === 'special') {

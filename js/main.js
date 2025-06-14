@@ -55,8 +55,7 @@ function initializeRuleSelector() {
 }
 
 // Initial setup
-window.addEventListener('load', async () => {
-  await loadWeaponSubSpecialData(); // JSONデータを先に読み込む
+window.addEventListener('load', () => { // async と await loadWeaponSubSpecialData() を削除
   resizeCanvases(); // DOMのサイズが確定してから実行
   initializeMapSelector();  // マップセレクタを初期化
   initializeRuleSelector(); // ルールセレクタを初期化
@@ -100,9 +99,11 @@ drawCanvas.addEventListener('mousedown', e => {
         mode = 'reposition'; // Set mode to reposition
         dragOffsetX = clickX - action.x;
         dragOffsetY = clickY - action.y;
-        // 再配置のために選択されたアイコンがメインウェポンの場合、サブ/スペUIを更新
+        // 再配置のために選択されたアイコンに応じてUIを更新
         if (action.itemType === 'main' && action.weaponName) {
           updateSubSpecialUI(action.weaponName); // マップ下の表示を更新
+        } else if ((action.itemType === 'sub' || action.itemType === 'special') && action.weaponName) {
+          updateRelatedMainWeaponsUI(action.weaponName, action.itemType);
         } else {
           updateSubSpecialUI(null); // それ以外はマップ下の表示をリセット
         }
