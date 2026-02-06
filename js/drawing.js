@@ -28,6 +28,19 @@ function setArrowMode(buttonElement) {
   }
 }
 
+function setSelectMode(buttonElement) {
+  mode = 'select';
+  selectedItemToPlace = null;
+  selectedInkColor = null;
+  isDrawingInk = false;
+  isDrawing = false;
+
+  clearAllButtonHighlights();
+  if (buttonElement) {
+    buttonElement.style.border = "2px solid #00FF00";
+  }
+}
+
 // Mouse event logic for drawing lines will be in main.js, calling these variables/functions
 // mousedown: set isDrawing = true, startX, startY
 // mousemove: (optional preview)

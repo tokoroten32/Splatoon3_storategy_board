@@ -377,6 +377,11 @@ const GEAR_DATA = [
   { key: 'opponent_ink_reduction', name: '相手インク影響軽減', src: './icons/gia/相手インク影響軽減.webp', width: 28, height: 28 }
 ];
 
+const PLAYER_ICON_DATA = [
+  { key: 'player_ally', name: '味方プレイヤー', src: './icons/インクリング.png', width: 30, height: 30 },
+  { key: 'player_enemy', name: '敵プレイヤー', src: './icons/インクリング２.png', width: 30, height: 30 }
+];
+
 const WEAPON_SUB_SPECIAL_DATA = [
   // シューター
   {"weapon":"わかばシューター","sub":"スプラッシュボム","special":"グレートバリア"},

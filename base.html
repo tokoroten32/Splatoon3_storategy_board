@@ -9,6 +9,7 @@
     #app-container { display: flex; width: 100%; height: 100%; }
 
     #menu-panel {
+      position: relative; /* For positioning the toggle button */
       width: 280px; /* メニューの幅を固定 */
       background-color: #333;
       padding: 15px;
@@ -101,15 +102,6 @@
       flex-wrap: wrap;
       gap: 5px;
     }
-    #selected-gear-display-area {
-      min-height: 100px; /* ギアを配置するエリアの最小の高さ */
-      border: 1px dashed #666;
-      padding: 10px;
-      margin-bottom: 15px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-    }
     #info-panel-toggle {
       position: absolute;
       top: 10px;
@@ -144,6 +136,49 @@
       margin-bottom: 15px; /* 下の要素とのマージン */
       padding: 5px 0;
     }
+    /* --- New Gear Grid Styles --- */
+    #gear-grid-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .gear-row {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .gear-label {
+      width: 40px; /* ラベルの幅を固定 */
+      font-size: 12px;
+      text-align: center;
+    }
+    .gear-slot {
+      border: 1px dashed #666;
+      background-color: #2a2a2a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: border-color 0.2s;
+    }
+    .main-gear-slot {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%; /* メインギアは丸く */
+    }
+    .sub-gear-slot {
+      width: 30px;
+      height: 30px;
+      border-radius: 5px; /* サブギアは四角く */
+    }
+    .gear-slot.drag-over {
+      border-color: gold;
+      border-style: solid;
+    }
+    .gear-slot img {
+      max-width: 90%;
+      max-height: 90%;
+    }
   </style>
 </head>
 <body>
@@ -154,6 +189,7 @@
         <button onclick="setArrowMode(this)">矢印を引く</button>
         <button onclick="setInkMode('orange', this)">味方インク</button>
         <button onclick="setInkMode('blue', this)">敵インク</button>
+
         <button onclick="clearCanvas()">クリア</button>
         <div id="map-selector-container" style="margin-top:10px; padding-top:10px; border-top:1px solid #555;">
           <span>マップ選択:</span>
@@ -198,11 +234,33 @@
         <!-- 選択されたメインウェポンに関連するサブ・スペボタンがここに表示される -->
       </div>
       
-      <h5>選択したギア</h5>
-      <div id="selected-gear-display-area">
-        <!-- 選択されたギアアイコンがここに表示される -->
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
+        <h5 style="margin: 0;">ギア構成</h5>
+        <button id="clear-gear-button" title="ギア構成をリセット" style="padding: 2px 8px; font-size: 12px; cursor: pointer; background-color: #5a5a5a; border: 1px solid #666; color: white;">クリア</button>
       </div>
-
+      <div id="gear-grid-container">
+        <div class="gear-row">
+          <span class="gear-label">アタマ</span>
+          <div class="gear-slot main-gear-slot" data-slot-index="0"></div>
+          <div class="gear-slot sub-gear-slot" data-slot-index="1"></div>
+          <div class="gear-slot sub-gear-slot" data-slot-index="2"></div>
+          <div class="gear-slot sub-gear-slot" data-slot-index="3"></div>
+        </div>
+        <div class="gear-row">
+          <span class="gear-label">フク</span>
+          <div class="gear-slot main-gear-slot" data-slot-index="4"></div>
+          <div class="gear-slot sub-gear-slot" data-slot-index="5"></div>
+          <div class="gear-slot sub-gear-slot" data-slot-index="6"></div>
+          <div class="gear-slot sub-gear-slot" data-slot-index="7"></div>
+        </div>
+        <div class="gear-row">
+          <span class="gear-label">クツ</span>
+          <div class="gear-slot main-gear-slot" data-slot-index="8"></div>
+          <div class="gear-slot sub-gear-slot" data-slot-index="9"></div>
+          <div class="gear-slot sub-gear-slot" data-slot-index="10"></div>
+          <div class="gear-slot sub-gear-slot" data-slot-index="11"></div>
+        </div>
+      </div>
       <div id="gear-selector">
         <span id="gear-selector-title">ギア選択:</span>
         <div id="gear-icons-container" style="margin-top: 5px;">

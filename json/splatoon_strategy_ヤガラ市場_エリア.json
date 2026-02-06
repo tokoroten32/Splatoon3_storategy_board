@@ -1,0 +1,136 @@
+{
+  "selectedMapKey": "yagara",
+  "selectedRuleKey": "ar",
+  "actions": [
+    {
+      "type": "item_icon",
+      "itemType": "main",
+      "weaponName": "スプラシューターコラボ",
+      "x": 636,
+      "y": 615,
+      "src": "./icons/weapon-main/shooter/スプラシューターコラボ.png",
+      "width": 60,
+      "height": 60
+    },
+    {
+      "type": "item_icon",
+      "itemType": "main",
+      "weaponName": "スプラマニューバー",
+      "x": 566,
+      "y": 474,
+      "src": "./icons/weapon-main/dualies/スプラマニューバー.png",
+      "width": 60,
+      "height": 60
+    },
+    {
+      "type": "line",
+      "startX": 668,
+      "startY": 259,
+      "endX": 704,
+      "endY": 866,
+      "color": "cyan",
+      "lineWidth": 2
+    },
+    {
+      "type": "line",
+      "startX": 714,
+      "startY": 148,
+      "endX": 714,
+      "endY": 148,
+      "color": "cyan",
+      "lineWidth": 2
+    },
+    {
+      "type": "line",
+      "startX": 1016,
+      "startY": 680,
+      "endX": 1016,
+      "endY": 680,
+      "color": "cyan",
+      "lineWidth": 2
+    },
+    {
+      "type": "line",
+      "startX": 731,
+      "startY": 170,
+      "endX": 1063,
+      "endY": 724,
+      "color": "cyan",
+      "lineWidth": 2
+    },
+    {
+      "type": "line",
+      "startX": 282,
+      "startY": 247,
+      "endX": 682,
+      "endY": 948,
+      "color": "cyan",
+      "lineWidth": 2
+    },
+    {
+      "type": "line",
+      "startX": 832,
+      "startY": 24,
+      "endX": 1141,
+      "endY": 628,
+      "color": "cyan",
+      "lineWidth": 2
+    },
+    {
+      "type": "line",
+      "startX": 139,
+      "startY": 334,
+      "endX": 531,
+      "endY": 929,
+      "color": "cyan",
+      "lineWidth": 2
+    },
+    {
+      "type": "item_icon",
+      "itemType": "player",
+      "weaponName": "敵プレイヤー",
+      "x": 1137,
+      "y": 271,
+      "src": "./icons/インクリング２.png",
+      "width": 60,
+      "height": 60
+    },
+    {
+      "type": "item_icon",
+      "itemType": "player",
+      "weaponName": "敵プレイヤー",
+      "x": 1081,
+      "y": 177,
+      "src": "./icons/インクリング２.png",
+      "width": 60,
+      "height": 60
+    },
+    {
+      "type": "arrow",
+      "startX": 540,
+      "startY": 505,
+      "endX": 709,
+      "endY": 408,
+      "color": "yellow",
+      "lineWidth": 2
+    },
+    {
+      "type": "arrow",
+      "startX": 709,
+      "startY": 408,
+      "endX": 709,
+      "endY": 408,
+      "color": "yellow",
+      "lineWidth": 2
+    },
+    {
+      "type": "arrow",
+      "startX": 678,
+      "startY": 327,
+      "endX": 765,
+      "endY": 258,
+      "color": "yellow",
+      "lineWidth": 2
+    }
+  ]
+}

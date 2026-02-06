@@ -24,7 +24,7 @@ function drawArrow(ctx, fromX, fromY, toX, toY, color, lineWidth) {
   ctx.stroke();
 }
 
-function redrawAllActions() {
+function redrawAllActions(selectedItems = []) {
   drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); // まずキャンバスをクリア
   actions.forEach(action => {
     if (action.type === 'line') {
@@ -44,6 +44,12 @@ function redrawAllActions() {
         console.error(`アイコン再描画エラー: ${action.src}`);
         drawCtx.strokeRect(action.x, action.y, action.width, action.height);
       };
+      // 選択されている場合は枠線を表示
+      if (selectedItems.includes(action)) {
+        drawCtx.strokeStyle = '#00FF00'; // 緑色でハイライト
+        drawCtx.lineWidth = 3;
+        drawCtx.strokeRect(action.x - 2, action.y - 2, action.width + 4, action.height + 4);
+      }
     } else if (action.type === 'inkStroke') {
       action.points.forEach(point => {
         drawCtx.beginPath();

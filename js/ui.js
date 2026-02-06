@@ -57,7 +57,6 @@ function initializeAccordion() {
 
 function initializeGearUI() {
   const container = document.getElementById('gear-icons-container');
-  const selectedGearDisplayArea = document.getElementById('selected-gear-display-area');
   if (!container) {
     console.error("#gear-icons-container not found.");
     return;
@@ -71,6 +70,7 @@ function initializeGearUI() {
     button.style.padding = '2px';
     button.style.margin = '1px'; // 少し小さめのマージン
     button.style.cursor = 'pointer';
+    button.draggable = true; // ドラッグ可能にする
     button.title = gear.name;
 
     const img = new Image();
@@ -81,30 +81,124 @@ function initializeGearUI() {
     img.style.display = 'block';
     button.appendChild(img);
 
-    // ギアアイコンは名前テキストなしで、アイコンのみとする（スペース節約のため）
-    // 必要であれば items.js の武器ボタン生成ロジックを参考に nameSpan を追加
+    // ドラッグ開始時のイベント
+    button.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/plain', gear.src); // ドラッグするデータの種類と内容を設定
+      e.dataTransfer.setData('gear-name', gear.name); // 名前も渡す
+    });
 
-    button.onclick = () => {
-      console.log(`Gear selected: ${gear.name}`);
-      if (selectedGearDisplayArea) {
-        const selectedImg = new Image();
-        selectedImg.src = gear.src;
-        selectedImg.alt = gear.name;
-        selectedImg.title = gear.name;
-        selectedImg.style.width = `${gear.width}px`; // 元のサイズを維持
-        selectedImg.style.height = `${gear.height}px`;
-        selectedImg.style.margin = '2px';
-        selectedImg.style.cursor = 'pointer'; // 削除できるようにポインター変更
-        selectedImg.oncontextmenu = (e) => { // 右クリックで削除
-            e.preventDefault();
-            selectedImg.remove();
-        };
-        selectedGearDisplayArea.appendChild(selectedImg);
-      }
-      // 選択元のボタンのハイライトは行わない（複数選択可能なため）
-    };
     container.appendChild(button);
   });
+}
+
+function initializeGearGrid() {
+  const slots = document.querySelectorAll('.gear-slot');
+
+  // スロット内のギア画像にドラッグ＆ドロップと右クリック削除のイベントリスナーを追加するヘルパー関数
+  const addDragDropListenersToImage = (img, slot) => {
+    img.draggable = true;
+
+    // スロット内のギアをドラッグ開始
+    img.addEventListener('dragstart', (e) => {
+      e.stopPropagation(); // 親要素へのイベント伝播を停止
+      e.dataTransfer.setData('text/plain', img.src);
+      e.dataTransfer.setData('gear-name', img.alt);
+      e.dataTransfer.setData('source-slot-index', slot.dataset.slotIndex); // 移動元のスロットindexを保存
+
+      // ドラッグ中の見た目を変更（少し待ってから実行）
+      setTimeout(() => {
+        img.style.opacity = '0.5';
+      }, 0);
+    });
+
+    // ドラッグ終了時（ドロップ成功・失敗問わず）
+    img.addEventListener('dragend', (e) => {
+      e.stopPropagation();
+      img.style.opacity = '1'; // 見た目を元に戻す
+    });
+
+    // 右クリックで削除
+    img.addEventListener('contextmenu', (ev) => {
+      ev.preventDefault();
+      img.remove();
+    });
+  };
+
+  slots.forEach(slot => {
+    // ドロップ対象の上にある間
+    slot.addEventListener('dragover', (e) => {
+      e.preventDefault(); // ドロップを許可
+      slot.classList.add('drag-over');
+    });
+
+    // ドロップ対象から離れた時
+    slot.addEventListener('dragleave', () => {
+      slot.classList.remove('drag-over');
+    });
+
+    // ドロップされた時
+    slot.addEventListener('drop', (e) => {
+      e.preventDefault();
+      slot.classList.remove('drag-over');
+
+      const sourceSlotIndex = e.dataTransfer.getData('source-slot-index');
+
+      if (sourceSlotIndex) {
+        // --- 他のスロットからの移動 ---
+        const sourceSlot = document.querySelector(`.gear-slot[data-slot-index='${sourceSlotIndex}']`);
+        const sourceImg = sourceSlot ? sourceSlot.querySelector('img') : null;
+
+        // 移動元スロットや画像が見つからない、または同じスロットへのドロップの場合は何もしない
+        if (!sourceImg || sourceSlot === slot) {
+          return;
+        }
+
+        const targetImg = slot.querySelector('img');
+
+        // ドロップ先(target)の画像を移動元(source)へ移動
+        if (targetImg) {
+          sourceSlot.appendChild(targetImg);
+          addDragDropListenersToImage(targetImg, sourceSlot);
+        } else {
+          sourceSlot.innerHTML = '';
+        }
+
+        // 移動元(source)の画像をドロップ先(target)へ移動
+        slot.appendChild(sourceImg);
+        addDragDropListenersToImage(sourceImg, slot);
+      } else {
+        // --- 左のギアリストからの新規配置 ---
+        const gearSrc = e.dataTransfer.getData('text/plain');
+        const gearName = e.dataTransfer.getData('gear-name');
+
+        if (gearSrc) {
+          slot.innerHTML = ''; // 既存のギアをクリア
+          const img = document.createElement('img');
+          img.src = gearSrc;
+          img.alt = gearName;
+          img.title = gearName;
+          
+          slot.appendChild(img);
+          addDragDropListenersToImage(img, slot); // 新しいギアにイベントリスナーを設定
+        }
+      }
+    });
+  });
+}
+
+function initializeGearClearButton() {
+  const clearButton = document.getElementById('clear-gear-button');
+  if (clearButton) {
+    clearButton.addEventListener('click', () => {
+      // ユーザーに確認
+      if (confirm('ギア構成をすべてクリアしますか？')) {
+        const slots = document.querySelectorAll('.gear-slot');
+        slots.forEach(slot => {
+          slot.innerHTML = ''; // 各スロットの中身を空にする
+        });
+      }
+    });
+  }
 }
 
 function updateSubSpecialUI(mainWeaponName) {
@@ -233,23 +327,110 @@ function updateRelatedMainWeaponsUI(selectedSubOrSpecialName, itemType) { // ite
 function initializeInfoPanelToggle() {
   const toggleButton = document.getElementById('info-panel-toggle');
   const infoPanel = document.getElementById('info-panel');
+  const INFO_PANEL_STATE_KEY = 'splatoonStrategyBoard.infoPanel.isOpen';
 
   if (toggleButton && infoPanel) {
-    // 初期状態は開いているとする
-    infoPanel.dataset.isOpen = 'true'; // カスタムデータ属性で状態を管理
+    // ローカルストレージから保存された状態を読み込む
+    const savedState = localStorage.getItem(INFO_PANEL_STATE_KEY);
+    // 保存された値がない場合は 'true' (開いた状態) をデフォルトとする
+    const initialStateIsOpen = savedState === null ? true : (savedState === 'true');
+
+    // 初期状態を適用
+    infoPanel.dataset.isOpen = initialStateIsOpen.toString();
+    if (!initialStateIsOpen) {
+      // 閉じた状態のスタイルを適用（リロード時のアニメーションを防ぐため一時的に無効化）
+      infoPanel.style.transition = 'none';
+      infoPanel.style.width = '0px';
+      infoPanel.style.padding = '15px 0';
+      toggleButton.textContent = '>';
+      setTimeout(() => infoPanel.style.transition = '', 0); // すぐにアニメーションを再度有効化
+    }
 
     toggleButton.addEventListener('click', () => {
-      const isOpen = infoPanel.dataset.isOpen === 'true';
-      if (isOpen) {
+      const wasOpen = infoPanel.dataset.isOpen === 'true';
+      const nowOpen = !wasOpen;
+
+      if (nowOpen) {
+        infoPanel.style.width = '250px';
+        infoPanel.style.padding = '15px';
+        toggleButton.textContent = '<';
+      } else {
         infoPanel.style.width = '0px';
         infoPanel.style.padding = '15px 0'; // 縦のパディングは維持しつつ横を0に
         toggleButton.textContent = '>';
-      } else {
-        infoPanel.style.width = '250px'; // 元の幅に戻す
-        infoPanel.style.padding = '15px';
-        toggleButton.textContent = '<';
       }
-      infoPanel.dataset.isOpen = isOpen ? 'false' : 'true';
+      infoPanel.dataset.isOpen = nowOpen.toString();
+      // 新しい状態をローカルストレージに保存
+      localStorage.setItem(INFO_PANEL_STATE_KEY, nowOpen.toString());
     });
   }
+}
+
+function initializePlayerIconUI() {
+  const container = document.getElementById('controls');
+  if (!container) {
+    console.error("#controls container not found for player icons.");
+    return;
+  }
+
+  PLAYER_ICON_DATA.forEach(playerIcon => {
+    const button = document.createElement('button');
+    button.style.background = 'transparent';
+    button.style.border = '1px solid #555'; // clearAllButtonHighlights のデフォルトスタイルに合わせる
+    button.style.padding = '2px';
+    button.style.margin = '2px';
+    button.style.cursor = 'pointer';
+    button.title = playerIcon.name;
+    button.dataset.itemName = playerIcon.name; // 識別用
+
+    const img = new Image();
+    img.src = playerIcon.src;
+    img.alt = playerIcon.name;
+    img.style.width = `${playerIcon.width}px`;
+    img.style.height = `${playerIcon.height}px`;
+    img.style.display = 'block';
+    button.appendChild(img);
+
+    button.addEventListener('click', () => {
+      selectedItemToPlace = { type: 'player', data: playerIcon };
+      mode = 'place';
+      selectedInkColor = null;
+      isDrawing = false;
+      isDrawingInk = false;
+      isRepositioningIcon = false;
+      selectedIconForRepositioning = null;
+      drawCanvas.style.cursor = 'crosshair';
+
+      clearAllButtonHighlights();
+      button.style.border = '2px solid gold';
+    });
+
+    const clearButton = Array.from(container.querySelectorAll('button')).find(btn => btn.textContent === 'クリア');
+    if (clearButton) {
+      container.insertBefore(button, clearButton);
+    } else {
+      container.appendChild(button);
+    }
+  });
+}
+
+function initializeSelectButton() {
+  const container = document.getElementById('controls');
+  if (!container) return;
+
+  const button = document.createElement('button');
+  button.textContent = '選択';
+  button.style.background = '#333';
+  button.style.color = 'white';
+  button.style.border = '1px solid #555';
+  button.style.padding = '5px 10px';
+  button.style.margin = '2px';
+  button.style.cursor = 'pointer';
+
+  button.addEventListener('click', () => {
+    setSelectMode(button);
+  });
+
+  // 先頭に追加
+  container.insertBefore(button, container.firstChild);
 }

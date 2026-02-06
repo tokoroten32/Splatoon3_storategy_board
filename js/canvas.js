@@ -35,7 +35,13 @@ function drawBackground() {
     return;
   }
 
-  const mapImagePath = mapInfo.rules[selectedRuleKey];
+  const ruleInfo = RULE_DATA[selectedRuleKey];
+  const ruleName = ruleInfo ? ruleInfo.displayName : selectedRuleKey;
+  const mapName = mapInfo.displayName;
+
+  // フォルダの命名規則に従ってパスを生成
+  // map-rule/画像（[rule]）-ブキ射程表あり/（[rule]）[map_name]
+  const mapImagePath = `./map-rule/画像（${ruleName}）-ブキ射程表あり/（${ruleName}）${mapName}.jpg`;
 
   if (mapImagePath) {
     const img = new Image();
@@ -74,12 +80,5 @@ function drawBackground() {
       bgCtx.fillStyle = "white";
       bgCtx.fillText(`Error loading map: ${mapImagePath}`, 10, 30);
     };
-  } else {
-    console.error(`Map image path not found for map: ${selectedMapKey}, rule: ${selectedRuleKey}`);
-    bgCtx.fillStyle = '#555'; // デフォルト背景色
-    bgCtx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
-    bgCtx.font = "16px sans-serif";
-    bgCtx.fillStyle = "white";
-    bgCtx.fillText(`Map image for rule "${RULE_DATA[selectedRuleKey]?.displayName || selectedRuleKey}" on map "${mapInfo.displayName}" not found.`, 10, 30);
   }
 }
