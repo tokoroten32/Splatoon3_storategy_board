@@ -35,8 +35,41 @@ function initializeMapSelector() {
   }
   mapSelect.value = selectedMapKey; // 初期値を設定
 
+  const variantContainer = document.getElementById('map-variant-container');
+  const variantSelect = document.getElementById('map-variant-select');
+
+  function updateVariantDropdown(mapKey) {
+    if (!variantSelect || !variantContainer) return;
+    variantSelect.innerHTML = ''; // 一旦クリア
+
+    if (MAP_VARIANTS[mapKey] && !(selectedMapKey === 'baigai' && selectedRuleKey === 'ya')) {
+      // バリエーションが存在するマップの場合
+      variantContainer.style.display = 'block';
+      MAP_VARIANTS[mapKey].forEach(variant => {
+        const opt = document.createElement('option');
+        opt.value = variant;
+        opt.textContent = variant.trim(); // 画面表示時は全角スペースをトリムして綺麗に見せる
+        variantSelect.appendChild(opt);
+      });
+    } else {
+      // 通常マップの場合は非表示にする
+      variantContainer.style.display = 'none';
+    }
+  }
+
+  // 初期読み込み時にも一度実行してドロップダウンの状態を合わせる
+  updateVariantDropdown(selectedMapKey);
+
+  // 状態選択ドロップダウンが変更されたら背景を再描画するイベント
+  if (variantSelect) {
+    variantSelect.addEventListener('change', () => {
+      drawBackground();
+    });
+  }
+
   mapSelect.addEventListener('change', (event) => {
     selectedMapKey = event.target.value;
+    updateVariantDropdown(selectedMapKey); // マップ変更時にドロップダウンを更新 👇
     drawBackground(); // 新しいマップで背景を再描画
     clearCanvas();    // マップ変更時に描画盤面をクリア
     saveCurrentTabState();
@@ -439,6 +472,25 @@ function loadMapState(event) {
         // UIの選択状態を更新
         const mapSelect = document.getElementById('map-select');
         if (mapSelect) mapSelect.value = selectedMapKey;
+
+        // JSONファイル読み込み時にもドロップダウンの表示を連動させる
+        const variantContainer = document.getElementById('map-variant-container');
+        const variantSelect = document.getElementById('map-variant-select');
+        if (variantSelect && variantContainer) {
+          variantSelect.innerHTML = '';
+          if (MAP_VARIANTS[selectedMapKey] && !(selectedMapKey === 'baigai' && selectedRuleKey === 'ya')) {
+            variantContainer.style.display = 'block';
+            MAP_VARIANTS[selectedMapKey].forEach(variant => {
+              const opt = document.createElement('option');
+              opt.value = variant;
+              opt.textContent = variant.trim();
+              variantSelect.appendChild(opt);
+            });
+          } else {
+            variantContainer.style.display = 'none';
+          }
+        }
+
         const ruleSelect = document.getElementById('rule-select');
         if (ruleSelect) ruleSelect.value = selectedRuleKey;
 
@@ -578,6 +630,23 @@ function switchTab(tabId) {
   // Update UI Selectors
   const mapSelect = document.getElementById('map-select');
   if (mapSelect) mapSelect.value = selectedMapKey;
+  
+  const variantContainer = document.getElementById('map-variant-container');
+  const variantSelect = document.getElementById('map-variant-select');
+  if (variantSelect && variantContainer) {
+    variantSelect.innerHTML = '';
+    if (MAP_VARIANTS[selectedMapKey] && !(selectedMapKey === 'baigai' && selectedRuleKey === 'ya')) {
+      variantContainer.style.display = 'block';
+      MAP_VARIANTS[selectedMapKey].forEach(variant => {
+        const opt = document.createElement('option');
+        opt.value = variant;
+        opt.textContent = variant.trim();
+        variantSelect.appendChild(opt);
+      });
+    } else {
+      variantContainer.style.display = 'none';
+    }
+  }
   
   const ruleSelect = document.getElementById('rule-select');
   if (ruleSelect) ruleSelect.value = selectedRuleKey;

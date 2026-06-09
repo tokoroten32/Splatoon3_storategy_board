@@ -39,9 +39,25 @@ function drawBackground() {
   const ruleName = ruleInfo ? ruleInfo.displayName : selectedRuleKey;
   const mapName = mapInfo.displayName;
 
-  // フォルダの命名規則に従ってパスを生成
+  // --- 修正：選択されたバリエーションのテキストを取得してパスに組み込む ---
+  let variantText = '';
+  const variantSelect = document.getElementById('map-variant-select');
+  
+  // バリエーションが存在するマップかつ、要素が選択されていればその文字列（「 その１」など）を使用
+  if (MAP_VARIANTS[selectedMapKey] && variantSelect && variantSelect.value) {
+    variantText = variantSelect.value;
+
+    if (selectedMapKey === 'baigai' && selectedRuleKey === 'ya') {
+      variantText = '';
+    }
+
+  }
+
+  // 生成するパスの mapName の後ろに ${variantText} を追加
+    // フォルダの命名規則に従ってパスを生成
   // map-rule/画像（[rule]）-ブキ射程表あり/（[rule]）[map_name]
-  const mapImagePath = `./map-rule/画像（${ruleName}）-ブキ射程表あり/（${ruleName}）${mapName}.jpg`;
+  const mapImagePath = `./map-rule/画像（${ruleName}）-ブキ射程表あり/（${ruleName}）${mapName}${variantText}.jpg`;
+  // --- ここまで修正 ---
 
   if (mapImagePath) {
     const img = new Image();

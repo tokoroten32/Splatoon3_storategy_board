@@ -310,7 +310,7 @@ const MAP_DATA = {
   // 他のマップデータも同様に追加...
   // 以下、提供されたリストに基づいて追加 (一部省略、必要に応じて全件追加してください)
   'takaasi': { displayName: 'タカアシ経済特区', rules: { 'nb': './maps/タカアシ経済特区/takaasi_nb.avif', 'ar': './maps/タカアシ経済特区/takaasi_ar.avif', 'ya': './maps/タカアシ経済特区/takaasi_ya.jpg', 'hk': './maps/タカアシ経済特区/takaasi_hk.avif', 'as': './maps/タカアシ経済特区/takaasi_as.jpg' } },
-  'tarapo': { displayName: 'タラポート', rules: { 'nb': './maps/タラポート/tarapo_nb.avif', 'ar': './maps/タラポート/tarapo_ar.avif', 'ya': './maps/タラポート/tarapo_ya.avif', 'hk': './maps/タラポート/tarapo_hk.jpg', 'as': './maps/タラポート/tarapo_as.jpg' } },
+  'tarapo': { displayName: 'タラポートショッピングパーク', rules: { 'nb': './maps/タラポート/tarapo_nb.avif', 'ar': './maps/タラポート/tarapo_ar.avif', 'ya': './maps/タラポート/tarapo_ya.avif', 'hk': './maps/タラポート/tarapo_hk.jpg', 'as': './maps/タラポート/tarapo_as.jpg' } },
   'tyouzame': { displayName: 'チョウザメ造船', rules: { 'nb': './maps/チョウザメ造船/tyouzame_nb.jpg', 'ar': './maps/チョウザメ造船/tyouzame_ar.avif', 'ya': './maps/チョウザメ造船/tyouzame_ya.avif', 'hk': './maps/チョウザメ造船/tyouzame_hk.avif', 'as': './maps/チョウザメ造船/tyouzame_as.avif' } },
   'namerou': { displayName: 'ナメロウ金属', rules: { 'nb': './maps/ナメロウ金属/namerou_nb.webp', 'ar': './maps/ナメロウ金属/namerou_ar.avif', 'ya': './maps/ナメロウ金属/namerou_ya.avif', 'hk': './maps/ナメロウ金属/namerou_hk.jpg', 'as': './maps/ナメロウ金属/namerou_as.webp' } },
   'nanpura': { displayName: 'ナンプラー遺跡', rules: { 'nb': './maps/ナンプラー遺跡/nanpura-_nb.avif', 'ar': './maps/ナンプラー遺跡/nanpura-_ar.avif', 'ya': './maps/ナンプラー遺跡/nanpura-_ya.avif', 'hk': './maps/ナンプラー遺跡/nanpura-_hk.jpg', 'as': './maps/ナンプラー遺跡/nanpura-_as.jpg' } }, // ファイル名注意: nanpura-
@@ -324,6 +324,14 @@ const MAP_DATA = {
   'yunohana': { displayName: 'ユノハナ大渓谷', rules: { 'nb': './maps/ユノハナ大渓谷/yunohana_nb.jpg', 'ar': './maps/ユノハナ大渓谷/yunohana_ar.avif', 'ya': './maps/ユノハナ大渓谷/yunohana_ya.png', 'hk': './maps/ユノハナ大渓谷/yunohana_hk.avif', 'as': './maps/ユノハナ大渓谷/yunohana_as.avif' } },
   'ryuuguu': { displayName: 'リュウグウターミナル', rules: { 'nb': './maps/リュウグウターミナル/ryuuguu_nb.avif', 'ar': './maps/リュウグウターミナル/ryuuguu_ar.webp', 'ya': './maps/リュウグウターミナル/ryuuguu_ya.jpg', 'hk': './maps/リュウグウターミナル/ryuuguu_hk.webp', 'as': './maps/リュウグウターミナル/ryuuguu_as.avif' } },
   'amabi': { displayName: '海女美術大学', rules: { 'nb': './maps/海女美術大学/amabi_nb.avif', 'ar': './maps/海女美術大学/amabi_ar.avif', 'ya': './maps/海女美術大学/amabi_ya.avif', 'hk': './maps/海女美術大学/amabi_hk.avif', 'as': './maps/海女美術大学/amabi_as.avif' } }
+};
+
+// 👇 マップごとの形状変化・レイヤーのバリエーション定義を追加
+const MAP_VARIANTS = {
+  'kajiki': ['　その1', '　その2'],            // カジキ空港（全角スペースを含む）
+  'tyouzame': ['　その1', '　その2'],          // チョウザメ造船（全角スペースを含む）
+  'baigai': ['　上層', '　下層'],                     // バイガイ亭
+  'mahimahi': ['　満潮時', '　干潮時']               // マヒマヒリゾート＆スパ
 };
 
 const SPECIAL_WEAPON_DATA = [
