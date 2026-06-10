@@ -307,8 +307,7 @@ const MAP_DATA = {
       'as': './maps/スメーシーワールド/sumesi_as.avif'
     }
   },
-  // 他のマップデータも同様に追加...
-  // 以下、提供されたリストに基づいて追加 (一部省略、必要に応じて全件追加してください)
+
   'takaasi': { displayName: 'タカアシ経済特区', rules: { 'nb': './maps/タカアシ経済特区/takaasi_nb.avif', 'ar': './maps/タカアシ経済特区/takaasi_ar.avif', 'ya': './maps/タカアシ経済特区/takaasi_ya.jpg', 'hk': './maps/タカアシ経済特区/takaasi_hk.avif', 'as': './maps/タカアシ経済特区/takaasi_as.jpg' } },
   'tarapo': { displayName: 'タラポートショッピングパーク', rules: { 'nb': './maps/タラポート/tarapo_nb.avif', 'ar': './maps/タラポート/tarapo_ar.avif', 'ya': './maps/タラポート/tarapo_ya.avif', 'hk': './maps/タラポート/tarapo_hk.jpg', 'as': './maps/タラポート/tarapo_as.jpg' } },
   'tyouzame': { displayName: 'チョウザメ造船', rules: { 'nb': './maps/チョウザメ造船/tyouzame_nb.jpg', 'ar': './maps/チョウザメ造船/tyouzame_ar.avif', 'ya': './maps/チョウザメ造船/tyouzame_ya.avif', 'hk': './maps/チョウザメ造船/tyouzame_hk.avif', 'as': './maps/チョウザメ造船/tyouzame_as.avif' } },
@@ -387,7 +386,7 @@ const GEAR_DATA = [
 
 const PLAYER_ICON_DATA = [
   { key: 'player_ally', name: '味方プレイヤー', src: './icons/インクリング.png', width: 30, height: 30 },
-  { key: 'player_enemy', name: '敵プレイヤー', src: './icons/インクリング２.png', width: 30, height: 30 }
+  { key: 'player_enemy', name: '敵プレイヤー', src: './icons/インクリング2.PNG', width: 30, height: 30 }
 ];
 
 const WEAPON_SUB_SPECIAL_DATA = [
@@ -401,7 +400,7 @@ const WEAPON_SUB_SPECIAL_DATA = [
   {"weapon":"スプラシューター","sub":"キューバンボム","special":"ウルトラショット"},
   {"weapon":"スプラシューターコラボ","sub":"スプラッシュボム","special":"トリプルトルネード"},
   {"weapon":".52ガロン","sub":"スプラッシュシールド","special":"メガホンレーザー"},
-  {"weapon":".52ガロンデコ","sub":"カーリングボム","special":"テイオウイカ"},
+  {"weapon":".52ガロンデコ","sub":"カーリングボム","special":"スミナガシート"},
   {"weapon":"N-ZAP85","sub":"キューバンボム","special":"エナジースタンド"},
   {"weapon":"N-ZAP89","sub":"ロボットボム","special":"デコイチラシ"},
   {"weapon":"プライムシューター","sub":"ラインマーカー","special":"カニタンク"},
@@ -413,7 +412,7 @@ const WEAPON_SUB_SPECIAL_DATA = [
   {"weapon":"L3リールガン","sub":"カーリングボム","special":"カニタンク"},
   {"weapon":"L3リールガンD","sub":"クイックボム","special":"ウルトラハンコ"},
   {"weapon":"ジェットスイーパー","sub":"ラインマーカー","special":"キューインキ"},
-  {"weapon":"ジェットスイーパーカスタム","sub":"ポイズンミスト","special":"アメフラシ"},
+  {"weapon":"ジェットスイーパーカスタム","sub":"クイックボム","special":"ウルトラチャクチ"},
   {"weapon":"シャープマーカー","sub":"クイックボム","special":"カニタンク"},
   {"weapon":"シャープマーカーネオ","sub":"キューバンボム","special":"トリプルトルネード"},
   {"weapon":"ボールドマーカー","sub":"カーリングボム","special":"ウルトラハンコ"},
@@ -430,7 +429,7 @@ const WEAPON_SUB_SPECIAL_DATA = [
   {"weapon":"ワイドローラー","sub":"スプラッシュシールド","special":"キューインキ"},
   {"weapon":"ワイドローラーコラボ","sub":"ラインマーカー","special":"アメフラシ"},
   {"weapon":"ヴァリアブルローラー","sub":"トラップ","special":"マルチミサイル"},
-  {"weapon":"ヴァリアブルローラーフォイル","sub":"ポイントセンサー","special":"スミナガシート"},
+  {"weapon":"ヴァリアブルローラーフォイル","sub":"キューバンボム","special":"スミナガシート"},
   // チャージャー
   {"weapon":"スプラチャージャー","sub":"スプラッシュボム","special":"キューインキ"},
   {"weapon":"スプラチャージャーコラボ","sub":"スプラッシュシールド","special":"トリプルトルネード"},
@@ -445,9 +444,9 @@ const WEAPON_SUB_SPECIAL_DATA = [
   {"weapon":"ソイチューバー","sub":"トーピード","special":"マルチミサイル"},
   {"weapon":"ソイチューバーカスタム","sub":"タンサンボム","special":"ウルトラハンコ"},
   {"weapon":"14式竹筒銃・甲","sub":"ロボットボム","special":"メガホンレーザー"},
-  {"weapon":"14式竹筒銃・乙","sub":"タンサンボム","special":"カニタンク"},
+  {"weapon":"14式竹筒銃・乙","sub":"タンサンボム","special":"デコイチラシ"},
   {"weapon":"R-PEN／5B","sub":"スプリンクラー","special":"エナジースタンド"},
-  {"weapon":"R-PEN／5H","sub":"スプラッシュシールド","special":"キューインキ"},
+  {"weapon":"R-PEN／5H","sub":"スプラッシュシールド","special":"アメフラシ"},
   // スロッシャー
   {"weapon":"バケットスロッシャー","sub":"スプラッシュボム","special":"トリプルトルネード"},
   {"weapon":"バケットスロッシャーデコ","sub":"ラインマーカー","special":"ショクワンダー"},
@@ -460,7 +459,7 @@ const WEAPON_SUB_SPECIAL_DATA = [
   {"weapon":"エクスプロッシャー","sub":"ポイントセンサー","special":"アメフラシ"},
   {"weapon":"エクスプロッシャーカスタム","sub":"スプラッシュシールド","special":"ウルトラチャクチ"},
   {"weapon":"モップリン","sub":"キューバンボム","special":"サメライド"},
-  {"weapon":"モップリンD","sub":"トラップ","special":"ホップソナー"},
+  {"weapon":"モップリンD","sub":"ジャンプビーコン","special":"ホップソナー"},
   // スピナー
   {"weapon":"バレルスピナー","sub":"スプリンクラー","special":"ホップソナー"},
   {"weapon":"バレルスピナーデコ","sub":"ポイントセンサー","special":"テイオウイカ"},
@@ -473,12 +472,12 @@ const WEAPON_SUB_SPECIAL_DATA = [
   {"weapon":"クーゲルシュライバー","sub":"タンサンボム","special":"ジェットパック"},
   {"weapon":"クーゲルシュライバーヒュー","sub":"トラップ","special":"キューインキ"},
   {"weapon":"イグザミナー","sub":"カーリングボム","special":"エナジースタンド"},
-  {"weapon":"イグザミナー・ヒュー","sub":"ポイズンミスト","special":"カニタンク"},
+  {"weapon":"イグザミナー・ヒュー","sub":"スプラッシュボム","special":"カニタンク"},
   // ブラスター
   {"weapon":"ホットブラスター","sub":"ロボットボム","special":"グレートバリア"},
-  {"weapon":"ホットブラスターカスタム","sub":"ジャンプビーコン","special":"ウルトラショット"},
+  {"weapon":"ホットブラスターカスタム","sub":"ポイントセンサー","special":"ウルトラチャクチ"},
   {"weapon":"ロングブラスター","sub":"キューバンボム","special":"ホップソナー"},
-  {"weapon":"ロングブラスターカスタム","sub":"スプリンクラー","special":"サメライド"},
+  {"weapon":"ロングブラスターカスタム","sub":"スプラッシュボム","special":"テイオウイカ"},
   {"weapon":"ラピッドブラスター","sub":"トラップ","special":"トリプルトルネード"},
   {"weapon":"ラピッドブラスターデコ","sub":"トーピード","special":"ジェットパック"},
   {"weapon":"Rブラスターエリート","sub":"ポイズンミスト","special":"キューインキ"},
@@ -488,7 +487,7 @@ const WEAPON_SUB_SPECIAL_DATA = [
   {"weapon":"クラッシュブラスター","sub":"スプラッシュボム","special":"ウルトラショット"},
   {"weapon":"クラッシュブラスターネオ","sub":"カーリングボム","special":"デコイチラシ"},
   {"weapon":"S-BLAST92","sub":"スプリンクラー","special":"サメライド"},
-  {"weapon":"S-BLAST91","sub":"スプラッシュシールド","special":"ナイスダマ"},
+  {"weapon":"S-BLAST91","sub":"クイックボム","special":"ナイスダマ"},
   // マニューバー
   {"weapon":"スプラマニューバー","sub":"キューバンボム","special":"カニタンク"},
   {"weapon":"スプラニューバーコラボ","sub":"カーリングボム","special":"スーパーチャクチ"},
@@ -501,7 +500,7 @@ const WEAPON_SUB_SPECIAL_DATA = [
   {"weapon":"デュアルスイーパー","sub":"スプラッシュボム","special":"ホップソナー"},
   {"weapon":"デュアルスイーパーカスタム","sub":"ジャンプビーコン","special":"デコイチラシ"},
   {"weapon":"ガエンFF","sub":"トラップ","special":"メガホンレーザー"},
-  {"weapon":"ガエンFFカスタム","sub":"クイックボム","special":"テイオウイカ"},
+  {"weapon":"ガエンFFカスタム","sub":"クイックボム","special":"トリプルトルネード"},
   // シェルター
   {"weapon":"パラシェルター","sub":"スプリンクラー","special":"トリプルトルネード"},
   {"weapon":"パラシェルターソレーラ","sub":"ロボットボム","special":"ジェットパック"},
@@ -510,7 +509,7 @@ const WEAPON_SUB_SPECIAL_DATA = [
   {"weapon":"スパイガジェット","sub":"トラップ","special":"サメライド"},
   {"weapon":"スパイガジェットソレーラ","sub":"トーピード","special":"スミナガシート"},
   {"weapon":"24式張替傘・甲","sub":"ラインマーカー","special":"グレートバリア"},
-  {"weapon":"24式張替傘・乙","sub":"ポイントセンサー","special":"ナイスダマ"},
+  {"weapon":"24式張替傘・乙","sub":"ポイズンミスト","special":"ウルトラチャクチ"},
   // フデ
   {"weapon":"パブロ","sub":"スプラッシュボム","special":"メガホンレーザー"},
   {"weapon":"パブロヒュー","sub":"トラップ","special":"ウルトラハンコ"},
@@ -521,10 +520,10 @@ const WEAPON_SUB_SPECIAL_DATA = [
   // ストリンガー
   {"weapon":"トライストリンガー","sub":"ポイズンミスト","special":"メガホンレーザー"},
   {"weapon":"トライストリンガーコラボ","sub":"スプリンクラー","special":"デコイチラシ"},
-  {"weapon":"LACT-450","sub":"ロボットボム","special":"ウルトラハンコ"},
+  {"weapon":"LACT-450","sub":"カーリングボム","special":"マルチミサイル"},
   {"weapon":"LACT-450デコ","sub":"スプラッシュシールド","special":"サメライド"},
-  {"weapon":"フルイドV","sub":"ポイントセンサー","special":"ウルトラショット"},
-  {"weapon":"フルイドVカスタム","sub":"ラインマーカー","special":"ホップソナー"},
+  {"weapon":"フルイドV","sub":"ロボットボム","special":"ウルトラハンコ"},
+  {"weapon":"フルイドVカスタム","sub":"ポイントセンサー","special":"ホップソナー"},
   // ワイパー
   {"weapon":"ドライブワイパー","sub":"トーピード","special":"ウルトラハンコ"},
   {"weapon":"ドライブワイパーデコ","sub":"ジャンプビーコン","special":"マルチミサイル"},
