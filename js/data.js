@@ -322,7 +322,8 @@ const MAP_DATA = {
   'yagara': { displayName: 'ヤガラ市場', rules: { 'nb': './maps/ヤガラ市場/yagara_nb.avif', 'ar': './maps/ヤガラ市場/yagara_ar.avif', 'ya': './maps/ヤガラ市場/yagara_ya.png', 'hk': './maps/ヤガラ市場/yagara_hk.jpg', 'as': './maps/ヤガラ市場/yagara_as.avif' } },
   'yunohana': { displayName: 'ユノハナ大渓谷', rules: { 'nb': './maps/ユノハナ大渓谷/yunohana_nb.jpg', 'ar': './maps/ユノハナ大渓谷/yunohana_ar.avif', 'ya': './maps/ユノハナ大渓谷/yunohana_ya.png', 'hk': './maps/ユノハナ大渓谷/yunohana_hk.avif', 'as': './maps/ユノハナ大渓谷/yunohana_as.avif' } },
   'ryuuguu': { displayName: 'リュウグウターミナル', rules: { 'nb': './maps/リュウグウターミナル/ryuuguu_nb.avif', 'ar': './maps/リュウグウターミナル/ryuuguu_ar.webp', 'ya': './maps/リュウグウターミナル/ryuuguu_ya.jpg', 'hk': './maps/リュウグウターミナル/ryuuguu_hk.webp', 'as': './maps/リュウグウターミナル/ryuuguu_as.avif' } },
-  'amabi': { displayName: '海女美術大学', rules: { 'nb': './maps/海女美術大学/amabi_nb.avif', 'ar': './maps/海女美術大学/amabi_ar.avif', 'ya': './maps/海女美術大学/amabi_ya.avif', 'hk': './maps/海女美術大学/amabi_hk.avif', 'as': './maps/海女美術大学/amabi_as.avif' } }
+  'amabi': { displayName: '海女美術大学', rules: { 'nb': './maps/海女美術大学/amabi_nb.avif', 'ar': './maps/海女美術大学/amabi_ar.avif', 'ya': './maps/海女美術大学/amabi_ya.avif', 'hk': './maps/海女美術大学/amabi_hk.avif', 'as': './maps/海女美術大学/amabi_as.avif' } },
+  'dekaline': { displayName: 'デカライン高架下', rules: { 'nb': './maps/デカライン高架下/dekaline_nb.avif', 'ar': './maps/デカライン高架下/dekaline_ar.avif', 'ya': './maps/デカライン高架下/dekaline_ya.avif', 'hk': './maps/デカライン高架下/dekaline_hk.avif', 'as': './maps/デカライン高架下/dekaline_as.avif' } }
 };
 
 // 👇 マップごとの形状変化・レイヤーのバリエーション定義を追加
